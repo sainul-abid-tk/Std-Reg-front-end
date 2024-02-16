@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addStudentAPI } from "../Services/allAPIs";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function RegisterPage() {
+  const navigate=useNavigate()
     const [registerData,SetRegisterData]=useState({
         firstName:"",lastName:"",address:"",email:"",gender:"",mobile:"",password:"",dateofBirth:"",course:""
     })
@@ -17,12 +21,18 @@ function RegisterPage() {
     const handleRegister=async()=>{
         const {firstName,lastName,address,email,gender,mobile,password,dateofBirth,course}=registerData
         if(!firstName||!lastName|| !address||!email||!gender||!mobile||!password||!dateofBirth||!course){
-            alert("please fill the form Completely!!!")
+            toast.warn("please fill the form Completely!!!")
         }else{
             try{
                 const result =await addStudentAPI(registerData)
             if(result.status==200){
-                console.log(result.data)
+              toast.success("Your Registration Successfully!!!") 
+              SetRegisterData({
+                firstName:"",lastName:"",address:"",email:"",gender:"",mobile:"",password:"",dateofBirth:"",course:""
+              })
+              setTimeout(() => {
+                navigate('/')
+              }, 2000);
             }else{
                 console.log(result.response.data)
             }
@@ -34,9 +44,10 @@ function RegisterPage() {
   return (
     <>
       <div style={{ height: "100vh" }} className="row">
+        <ToastContainer autoClose={2000} theme="colored" position="top-center"/>
         <div
           style={{ height: "100%" }}
-          className="col-4 bg-info d-flex flex-column justify-content-center align-content-center "
+          className="col-lg-4  bg-info d-flex flex-column justify-content-center align-content-center "
         >
           <h2 className="text-center mb-3 fw-bolder">Welcome</h2>
           <h5 className="text-center fw-bold mb-3 text-white ">
@@ -48,10 +59,10 @@ function RegisterPage() {
             <button className="btn btn-danger ">Go Back</button>
           </Link>
         </div>
-        <div className="col-8 py-5 ">
+        <div className="col-lg-8 py-5 ">
           <h1 className="text-center ">Apply as a Student</h1>
           <div className="row">
-            <div className="col-6 px-5 ">
+            <div className="col-lg-6 col-md-12  px-5 ">
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
@@ -111,7 +122,7 @@ function RegisterPage() {
             </div>
             </div>
             </div>
-            <div className="col-6 px-5 ">
+            <div className="col-lg-6 col-md-12 px-5 ">
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
